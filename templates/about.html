@@ -1,0 +1,55 @@
+{% extends "base.html" %} 
+{% block title %}Про нас - Світ Кросівок{% endblock %} 
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">Про Наш Магазин</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 items-center">
+    <div>
+        <p class="text-lg text-gray-700 mb-4">
+            <strong>"Світ Кросівок"</strong> – це не просто магазин. Це спільнота людей, 
+            закоханих у культуру снікерів. Ми розпочали свою діяльність у 2020 році 
+            з однією метою: зробити найкращі світові бренди доступними для кожного в Україні.
+        </p>
+        <p class="text-lg text-gray-700">
+            Наша місія - пропонувати клієнтам лише найкращі та 100% оригінальні 
+            кросівки. Ми віримо, що якісне взуття - це не лише комфорт, 
+            але й спосіб самовираження.
+        </p>
+    </div>
+    <div>
+        <img
+            src="https://zhmerynka.city/upload/article/o_1idic1soj13goqjqrgtejn2ifh8.JPG"
+            alt="Інтер'єр магазину"
+            class="w-full rounded-lg shadow-md"
+        />
+    </div>
+</div>
+
+<h2 class="text-3xl font-bold mb-6 text-center">Наша Команда</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="bg-white p-6 rounded-lg shadow-md text-center transform hover:scale-105 transition duration-300">
+        <img src="https://picsum.photos/seed/classicshoe/400/400" alt="Класичні кросівки" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+        <h3 class="font-bold text-xl mb-1">Гринишин Микола</h3>
+        <p class="text-gray-500 mb-2">Засновник / CEO</p>
+        <p class="text-gray-600">"Я вірю, що правильна пара кросівок може змінити ваш день."</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md text-center transform hover:scale-105 transition duration-300">
+        <img src="https://picsum.photos/seed/trendyshoe/400/400" alt="Лайфстайл кросівки" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+        <h3 class="font-bold text-xl mb-1">Бугайчук Дмитро</h3>
+        <p class="text-gray-500 mb-2">Керівник відділу продажів</p>
+        <p class="text-gray-600">"Допомагаю кожному клієнту знайти саме те, що він шукає."</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md text-center transform hover:scale-105 transition duration-300">
+        <img src="https://picsum.photos/seed/marketingshoe/400/400" alt="Яскраві кросівки" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+        <h3 class="font-bold text-xl mb-1">Гапяк Марк</h3>
+        <p class="text-gray-500 mb-2">Маркетинг-директор</p>
+        <p class="text-gray-600">"Розповідаю світові про найкращі кросівки."</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md text-center transform hover:scale-105 transition duration-300">
+        <img src="https://picsum.photos/seed/logisticsshoe/400/400" alt="Надійні кросівки" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+        <h3 class="font-bold text-xl mb-1">Сюйва Дмитро</h3>
+        <p class="text-gray-500 mb-2">Спеціаліст з логістики</p>
+        <p class="text-gray-600">"Гарантуємо, що ваша пара приїде вчасно."</p>
+    </div>
+</div>
+{% endblock %}
