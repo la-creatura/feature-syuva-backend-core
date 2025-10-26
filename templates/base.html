@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Світ Кросівок{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        
+        @keyframes slideDown {
+            0% { max-height: 0; opacity: 0; }
+            100% { max-height: 300px; opacity: 1; }
+        }
+        .animate-slide-down { animation: slideDown 0.3s ease-out forwards; }
+        .burger-line { transition: all 0.3s ease-in-out; }
+        .open .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+        .open .line2 { opacity: 0; }
+        .open .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-white to-blue-100 min-h-screen">
+    
+    <nav class="bg-white p-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-gray-900 text-xl font-bold transition-transform duration-300 hover:scale-110">👟 Світ Кросівок</a>
+            
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="/" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">Головна</a>
+                
+                <div class="relative group">
+                    <button class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">
+                        Категорії
+                    </button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden group-hover:block">
+                        {% for cat in g.categories %}
+                        <a href="{{ url_for('shop.category_view', category_id=cat['id']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            {{ cat['name'] }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <a href="/about" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">Про нас</a>
+                <a href="/feedback" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">Зворотний зв'язок</a>
+                
+                <a href="{{ url_for('shop.view_cart') }}" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">
+                    Кошик 🛒
+                    {% if session.cart %}
+                        <span class="ml-1 bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                            {{ session.cart.values() | sum }}
+                        </span>
+                    {% endif %}
+                </a>
+                
+                <form action="{{ url_for('shop.search') }}" method="GET" class="flex ml-4">
+                    <input type="text" name="q" placeholder="Пошук..." class="px-3 py-1 border rounded-l-md text-sm" value="{{ search_query or '' }}">
+                    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded-r-md text-sm hover:bg-blue-600">
+                        Знайти
+                    </button>
+                </form>
+            </div>
+            
+            <button id="mobile-menu-button" class="md:hidden text-gray-900 w-6 h-6 relative focus:outline-none">
+                <span class="burger-line block absolute h-0.5 w-6 bg-current line1"></span>
+                <span class="burger-line block absolute h-0.5 w-6 bg-current mt-2 line2"></span>
+                <span class="burger-line block absolute h-0.5 w-6 bg-current mt-4 line3"></span>
+            </button>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden overflow-hidden">
+            <a href="/" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">Головна</a>
+            <a href="/about" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">Про нас</a>
+            <a href="/feedback" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">Зворотний зв'язок</a>
+            <a href="{{ url_for('shop.view_cart') }}" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">
+                Кошик {% if session.cart %}({{ session.cart.values() | sum }}){% endif %}
+            </a>
+            <form action="{{ url_for('shop.search') }}" method="GET" class="flex mt-2 mb-2">
+                <input type="text" name="q" placeholder="Пошук..." class="w-full px-3 py-2 border rounded-l-md text-sm" value="{{ search_query or '' }}">
+                <button type="submit" class="bg-blue-500 text-white px-3 py-2 rounded-r-md text-sm hover:bg-blue-600">
+                    Знайти
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8 p-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenuButton.classList.toggle('open');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.classList.add('animate-slide-down');
+                mobileMenu.classList.remove('animate-slide-up');
+            } else {
+                mobileMenu.classList.add('animate-slide-up');
+                mobileMenu.classList.remove('animate-slide-down');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            }
+        });
+    </actionsCRIPT>
+</body>
+</html>
