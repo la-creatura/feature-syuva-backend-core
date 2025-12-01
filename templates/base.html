@@ -11,8 +11,23 @@
             0% { max-height: 0; opacity: 0; }
             100% { max-height: 300px; opacity: 1; }
         }
+        @keyframes slideUp {
+            0% { max-height: 300px; opacity: 1; }
+            100% { max-height: 0; opacity: 0; }
+        }
+        @keyframes dropdownFadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes dropdownFadeOut {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
         .animate-slide-down { animation: slideDown 0.3s ease-out forwards; }
-        .burger-line { transition: all 0.3s ease-in-out; }
+        .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
+        .categories-dropdown.show { animation: dropdownFadeIn 0.2s ease-out forwards; }
+        .categories-dropdown.hide { animation: dropdownFadeOut 0.2s ease-out forwards; }
+        .burger-line { transition: all 0.5s ease-in-out; }
         .open .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
         .open .line2 { opacity: 0; }
         .open .line3 { transform: rotate(45deg) translate(-5px, -6px); }
@@ -22,28 +37,28 @@
     
     <nav class="bg-white p-4 shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-gray-900 text-xl font-bold transition-transform duration-300 hover:scale-110">👟 Світ Кросівок</a>
+            <a href="/" class="text-gray-900 text-xl font-bold transition-transform duration-500 hover:scale-110">👟 Світ Кросівок</a>
             
             <div class="hidden md:flex items-center space-x-4">
-                <a href="/" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">Головна</a>
+                <a href="/" class="text-gray-700 hover:text-black transition duration-500 hover:underline hover:scale-110">Головна</a>
                 
-                <div class="relative group">
-                    <button class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">
+                <div class="relative categories-menu hover:scale-110 transition-transform duration-500">
+                    <button class="text-gray-700 hover:text-black transition duration-500 hover:underline categories-button">
                         Категорії
                     </button>
-                    <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden group-hover:block">
+                    <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden categories-dropdown">
                         {% for cat in g.categories %}
-                        <a href="{{ url_for('shop.category_view', category_id=cat['id']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <a href="{{ url_for('shop.category_view', category_id=cat['id']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition duration-300">
                             {{ cat['name'] }}
                         </a>
                         {% endfor %}
                     </div>
                 </div>
                 
-                <a href="/about" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">Про нас</a>
-                <a href="/feedback" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">Зворотний зв'язок</a>
+                <a href="/about" class="text-gray-700 hover:text-black transition duration-500 hover:underline hover:scale-110">Про нас</a>
+                <a href="/feedback" class="text-gray-700 hover:text-black transition duration-500 hover:underline hover:scale-110">Зворотний зв'язок</a>
                 
-                <a href="{{ url_for('shop.view_cart') }}" class="text-gray-700 hover:text-black transition-colors duration-300 hover:underline">
+                <a href="{{ url_for('shop.view_cart') }}" class="text-gray-700 hover:text-black transition duration-500 hover:underline hover:scale-110">
                     Кошик 🛒
                     {% if session.cart %}
                         <span class="ml-1 bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-1">
@@ -52,8 +67,8 @@
                     {% endif %}
                 </a>
                 
-                <form action="{{ url_for('shop.search') }}" method="GET" class="flex ml-4">
-                    <input type="text" name="q" placeholder="Пошук..." class="px-3 py-1 border rounded-l-md text-sm" value="{{ search_query or '' }}">
+                <form action="{{ url_for('shop.search') }}" method="GET" class="flex ml-4 transition duration-500 ease-in-out hover:scale-105 " >
+                    <input type="text" name="q" placeholder="Пошук..." class="px-3 py-1 border rounded-l-md text-sm hover:bg-gray-100 transition duration-500 " value="{{ search_query or '' }}">
                     <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded-r-md text-sm hover:bg-blue-600">
                         Знайти
                     </button>
@@ -68,10 +83,10 @@
         </div>
         
         <div id="mobile-menu" class="hidden md:hidden overflow-hidden">
-            <a href="/" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">Головна</a>
-            <a href="/about" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">Про нас</a>
-            <a href="/feedback" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">Зворотний зв'язок</a>
-            <a href="{{ url_for('shop.view_cart') }}" class="block text-gray-700 hover:text-black py-2 transform transition duration-300 hover:translate-x-2">
+            <a href="/" class="block text-gray-700 hover:text-black py-2 transform transition duration-500 hover:translate-x-2">Головна</a>
+            <a href="/about" class="block text-gray-700 hover:text-black py-2 transform transition duration-500 hover:translate-x-2">Про нас</a>
+            <a href="/feedback" class="block text-gray-700 hover:text-black py-2 transform transition duration-500 hover:translate-x-2">Зворотний зв'язок</a>
+            <a href="{{ url_for('shop.view_cart') }}" class="block text-gray-700 hover:text-black py-2 transform transition duration-500 hover:translate-x-2">
                 Кошик {% if session.cart %}({{ session.cart.values() | sum }}){% endif %}
             </a>
             <form action="{{ url_for('shop.search') }}" method="GET" class="flex mt-2 mb-2">
@@ -105,6 +120,74 @@
                 }, 300);
             }
         });
-    </actionsCRIPT>
+
+        // Categories dropdown menu
+        const categoriesMenu = document.querySelector('.categories-menu');
+        const categoriesButton = document.querySelector('.categories-button');
+        const categoriesDropdown = document.querySelector('.categories-dropdown');
+
+        if (categoriesMenu && categoriesButton && categoriesDropdown) {
+            let hideTimeout;
+            let pinned = false; // when true, dropdown stays open until next click
+
+            function showDropdown() {
+                clearTimeout(hideTimeout);
+                categoriesDropdown.classList.remove('hidden', 'hide');
+                categoriesDropdown.classList.add('show');
+            }
+
+            function hideDropdownAnimated() {
+                categoriesDropdown.classList.remove('show');
+                categoriesDropdown.classList.add('hide');
+                setTimeout(() => {
+                    if (categoriesDropdown.classList.contains('hide')) {
+                        categoriesDropdown.classList.add('hidden');
+                        categoriesDropdown.classList.remove('hide');
+                    }
+                }, 200);
+            }
+
+            // Hovering the button shows the menu (unless pinned by click)
+            categoriesButton.addEventListener('mouseenter', () => {
+                if (!pinned) showDropdown();
+            });
+
+            // Clicking the button toggles pin state: stays open until next click
+            categoriesButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                pinned = !pinned;
+                if (pinned) {
+                    showDropdown();
+                } else {
+                    hideDropdownAnimated();
+                }
+            });
+
+            // If user moves into the dropdown, keep it open
+            categoriesDropdown.addEventListener('mouseenter', () => {
+                clearTimeout(hideTimeout);
+                if (!pinned) {
+                    categoriesDropdown.classList.remove('hide');
+                    categoriesDropdown.classList.add('show');
+                }
+            });
+
+            // Leave the whole menu container: hide only if not pinned
+            categoriesMenu.addEventListener('mouseleave', () => {
+                if (pinned) return;
+                hideTimeout = setTimeout(() => {
+                    hideDropdownAnimated();
+                }, 50);
+            });
+
+            // Clicking outside closes the pinned dropdown
+            document.addEventListener('click', (e) => {
+                if (pinned && !categoriesMenu.contains(e.target)) {
+                    pinned = false;
+                    hideDropdownAnimated();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
