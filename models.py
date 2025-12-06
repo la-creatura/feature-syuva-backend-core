@@ -13,7 +13,6 @@ def init_db():
     conn = get_db_conn()
     cursor = conn.cursor()
 
-
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS categories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,8 +20,6 @@ def init_db():
     )
     ''')
 
-    
- 
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS sneakers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +32,6 @@ def init_db():
     )
     ''')
 
-   
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS feedback (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,7 +46,7 @@ def init_db():
     conn.close()
     print("База даних та таблиці перевірено/створено.")
 
-    def add_sneaker(name, description, price, image_url, category_id):
+def add_sneaker(name, description, price, image_url, category_id):
     conn = get_db_conn()
     cursor = conn.cursor()
     cursor.execute('''
@@ -87,4 +83,3 @@ def get_categories():
     categories = cursor.fetchall()
     conn.close()
     return categories
-    
