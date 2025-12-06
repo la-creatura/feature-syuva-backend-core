@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Керування Каталогом{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-center">Керування Каталогом</h1>
+
+<div class="mb-6">
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="text-blue-600 hover:underline font-medium bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200 rounded-xl p-2 inline-block ml-6 hover:scale-105 transition duration-500 ease-in-out">
+        Відгуки
+    </a>
+    <a href="{{ url_for('admin.manage_categories') }}" class="text-blue-600 hover:underline font-medium bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200 rounded-xl p-2 inline-block ml-6 hover:scale-105 transition duration-500 ease-in-out">
+        Категорії
+    </a>
+    <a href="{{ url_for('admin.manage_catalog') }}" class="text-blue-600 hover:underline font-medium bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200 rounded-xl p-2 inline-block ml-6 hover:scale-105 transition duration-500 ease-in-out">
+        Каталог
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Додати нову позицію</h2>
+        <form method="POST" action="{{ url_for('admin.manage_catalog') }}">
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 font-bold mb-2">Назва:</label>
+                <input type="text" name="name" id="name" class="w-full px-3 py-2 border rounded-lg" required>
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block text-gray-700 font-bold mb-2">Опис:</label>
+                <textarea name="description" id="description" class="w-full px-3 py-2 border rounded-lg" rows="3"></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block text-gray-700 font-bold mb-2">Ціна (ціла):</label>
+                <input type="number" name="price" id="price" class="w-full px-3 py-2 border rounded-lg" required>
+            </div>
+            <div class="mb-4">
+                <label for="image_url" class="block text-gray-700 font-bold mb-2">URL зображення (опц.):</label>
+                <div id="image-dropzone" class="w-full border-2 border-dashed border-gray-200 rounded-lg p-3 flex items-center gap-3">
+                    <input type="text" name="image_url" id="image_url" class="flex-1 px-3 py-2 border rounded-lg" placeholder="URL зображення" />
+                    <label id="pick-image" for="image-file-input" class="bg-gray-100 border border-gray-200 px-3 py-1 rounded-lg hover:bg-gray-200 cursor-pointer">Вибрати файл</label>
+                    <input type="file" id="image-file-input" accept="image/*" class="sr-only">
+                </div>
+                <div id="image-preview" class="mt-3 hidden">
+                    <img id="image-preview-img" src="" alt="preview" class="max-h-40 rounded-md border" />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="category_id" class="block text-gray-700 font-bold mb-2">Категорія (опц.):</label>
+                <select name="category_id" id="category_id" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="">-- Без категорії --</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat['id'] }}">{{ cat['name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Додати</button>
+        </form>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Існуючі позиції</h2>
+        <ul class="divide-y divide-gray-200">
+            {% for s in sneakers %}
+            <li class="py-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="font-semibold">{{ s['name'] }} <span class="text-sm text-gray-500">({{ s['category_name'] or 'Без категорії' }})</span></div>
+                        <div class="text-sm text-gray-600">{{ s['description'] }}</div>
+                        <div class="text-sm text-gray-800 font-medium">Ціна: {{ s['price'] }} </div>
+                    </div>
+                    <div class="ml-4 flex items-center gap-3">
+                        <a href="{{ url_for('admin.edit_sneaker', sneaker_id=s['id']) }}" class="text-indigo-600 hover:text-indigo-900 font-medium">Редагувати</a>
+                        <form method="POST" action="{{ url_for('admin.delete_sneaker', sneaker_id=s['id']) }}">
+                            <button type="submit" class="text-red-600 hover:text-red-900 font-medium">Видалити</button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+            {% else %}
+            <li class="py-3 text-gray-500">Позицій ще немає.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<p class="text-center mt-8">
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="text-blue-600 hover:underline">&larr; Повернутися до відгуків</a>
+</p>
+{% endblock %}
+ 
+{% block scripts %}
+<script>
+(() => {
+    const dropzone = document.getElementById('image-dropzone');
+    const fileInput = document.getElementById('image-file-input');
+    const pickBtn = document.getElementById('pick-image');
+    const imageUrlInput = document.getElementById('image_url');
+    const previewWrap = document.getElementById('image-preview');
+    const previewImg = document.getElementById('image-preview-img');
+
+    function showPreview(url){
+        previewImg.src = url;
+        previewWrap.classList.remove('hidden');
+    }
+
+    function uploadFile(file){
+        const formData = new FormData();
+        formData.append('file', file);
+        // show temporary disabled state
+        if (pickBtn) {
+            pickBtn.classList.add('opacity-50', 'pointer-events-none');
+            pickBtn.textContent = 'Завантаження...';
+        }
+
+        fetch("{{ url_for('admin.upload_image') }}", {
+            method: 'POST',
+            body: formData
+        }).then(r => r.json())
+        .then(data => {
+            if (data && data.url){
+                imageUrlInput.value = data.url;
+                showPreview(data.url);
+            } else {
+                alert('Помилка завантаження');
+            }
+        }).catch(err => {
+            console.error(err);
+            alert('Помилка завантаження');
+        }).finally(() => {
+            if (pickBtn) {
+                pickBtn.classList.remove('opacity-50', 'pointer-events-none');
+                pickBtn.textContent = 'Вибрати файл';
+            }
+        });
+    }
+
+    // file input change handler — triggered by native label click or drag-drop
+    if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+            const f = e.target.files[0];
+            if (f) uploadFile(f);
+        });
+    }
+
+    // drag & drop handlers
+    ['dragenter','dragover'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+            e.preventDefault(); e.stopPropagation();
+            dropzone.classList.add('bg-gray-50');
+        });
+    });
+    ['dragleave','drop'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+            e.preventDefault(); e.stopPropagation();
+            dropzone.classList.remove('bg-gray-50');
+        });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        if (!dt) return;
+        const f = dt.files && dt.files[0];
+        if (f) uploadFile(f);
+    });
+
+})();
+</script>
+{% endblock %}

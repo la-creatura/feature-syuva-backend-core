@@ -3,13 +3,19 @@
 
 {% block content %}
 <h1 class="text-3xl font-bold mb-6 text-center">Адмін-панель: Відгуки</h1>
-<div class="mb-6 text-center">
-    <a href="{{ url_for('admin.manage_categories') }}" class="text-blue-600 hover:underline font-medium">
-        Керувати Категоріями &rarr;
+<div class="mb-6">
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="text-blue-600 hover:underline font-medium bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200 rounded-xl p-2 inline-block ml-6 hover:scale-105 transition duration-500 ease-in-out">
+        Відгуки
+    </a>
+    <a href="{{ url_for('admin.manage_categories') }}" class="text-blue-600 hover:underline font-medium bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200 rounded-xl p-2 inline-block ml-6 hover:scale-105 transition duration-500 ease-in-out">
+        Категорії
+    </a>
+    <a href="{{ url_for('admin.manage_catalog') }}" class="text-blue-600 hover:underline font-medium bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200 rounded-xl p-2 inline-block ml-6 hover:scale-105 transition duration-500 ease-in-out">
+        Каталог
     </a>
 </div>
 
-<div class="bg-white shadow-md rounded-lg overflow-x-auto">
+<div class="bg-white shadow-md rounded-lg overflow-x-auto mt-6">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
