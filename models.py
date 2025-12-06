@@ -49,3 +49,42 @@ def init_db():
     conn.commit()
     conn.close()
     print("База даних та таблиці перевірено/створено.")
+
+    def add_sneaker(name, description, price, image_url, category_id):
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute('''
+    INSERT INTO sneakers (name, description, price, image_url, category_id)
+    VALUES (?, ?, ?, ?, ?)
+    ''', (name, description, price, image_url, category_id))
+    conn.commit()
+    sneaker_id = cursor.lastrowid
+    conn.close()
+    return sneaker_id
+
+def get_all_sneakers():
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT s.*, c.name as category_name FROM sneakers s
+    LEFT JOIN categories c ON s.category_id = c.id
+    ''')
+    sneakers = cursor.fetchall()
+    conn.close()
+    return sneakers
+
+def delete_sneaker(sneaker_id):
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM sneakers WHERE id = ?', (sneaker_id,))
+    conn.commit()
+    conn.close()
+
+def get_categories():
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM categories')
+    categories = cursor.fetchall()
+    conn.close()
+    return categories
+    
