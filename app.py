@@ -11,7 +11,7 @@ from routes.feedback import feedback_bp
 init_db()
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 
 app.config['SECRET_KEY'] = 'your-very-secret-random-key-12345' 
@@ -49,3 +49,34 @@ def manage_catalog():
 def delete_sneaker_route(sneaker_id):
     delete_sneaker(sneaker_id)
     return redirect(request.referrer or '/admin/manage_catalog')    
+
+import os
+from werkzeug.utils import secure_filename
+from flask import url_for
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/admin/upload_image', methods=['POST'])
+def upload_image():
+    if 'file' not in request.files:
+        return {'error': 'Немає файлу'}, 400
+    
+    file = request.files['file']
+    if file.filename == '' or not allowed_file(file.filename):
+        return {'error': 'Невірний формат'}, 400
+    
+    filename = secure_filename(file.filename)
+    # додайте унікальний префікс до назви
+    import uuid
+    filename = f"{uuid.uuid4()}_{filename}"
+    
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+    
+    return {'url': url_for('static', filename=f'uploads/{filename}')}
